@@ -3,7 +3,7 @@ from typing import Self
 
 
 class Cell:
-    def __init__(self, p1: Point, p2: Point, win: Window):
+    def __init__(self, p1: Point, p2: Point, win: Window = Window(0, 0)):
         self.__p1: Point = p1
         self.__p2: Point = p2
         self.__left: float = min(self.__p1.x, self.__p2.x)
