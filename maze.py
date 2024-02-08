@@ -13,8 +13,8 @@ class Maze:
         y0: float,
         row_count: int,
         col_count: int,
-        cell_width: int,
-        cell_height: int,
+        cell_width: float,
+        cell_height: float,
         win: Window = Window(0, 0),
     ):
         self.__x0 = x0
@@ -25,7 +25,8 @@ class Maze:
         self.__cell_height = cell_height
         self.__win = win
 
-        self.__cells = self.__create_cells()
+        self.cells = self.__create_cells()
+        self.__create_entrance_and_exit()
 
     def __create_cells(self) -> List:
         cells = []
@@ -49,5 +50,17 @@ class Maze:
             cells.append(row)
         return cells
 
-    def print_cells(self):
-        print(self.__cells)
+    def __animate(self) -> None:
+        self.__win.redraw()
+        time.sleep(0.05)
+
+    def __create_entrance_and_exit(self) -> None:
+        entrance = self.cells[0][0]
+        entrance.has_top = False
+        entrance.draw("black")
+        self.__animate()
+
+        exit_cell = self.cells[self.__row_count - 1][self.__col_count - 1]
+        exit_cell.has_bottom = False
+        exit_cell.draw("black")
+        self.__animate()

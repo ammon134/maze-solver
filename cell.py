@@ -8,8 +8,8 @@ class Cell:
         self.__p2: Point = p2
         self.__left: float = min(self.__p1.x, self.__p2.x)
         self.__right: float = max(self.__p1.x, self.__p2.x)
-        self.__top: float = max(self.__p1.y, self.__p2.y)
-        self.__bottom: float = min(self.__p1.y, self.__p2.y)
+        self.__top: float = min(self.__p1.y, self.__p2.y)
+        self.__bottom: float = max(self.__p1.y, self.__p2.y)
         self.has_left = True
         self.has_right = True
         self.has_top = True
@@ -36,15 +36,23 @@ class Cell:
     def draw(self, fill_color: str):
         if self.has_left:
             self.__win.draw_line(self.get_left_wall(), fill_color)
+        else:
+            self.__win.draw_line(self.get_left_wall(), "white")
 
         if self.has_top:
             self.__win.draw_line(self.get_top_wall(), fill_color)
+        else:
+            self.__win.draw_line(self.get_top_wall(), "white")
 
         if self.has_right:
             self.__win.draw_line(self.get_right_wall(), fill_color)
+        else:
+            self.__win.draw_line(self.get_right_wall(), "white")
 
         if self.has_bottom:
             self.__win.draw_line(self.get_bottom_wall(), fill_color)
+        else:
+            self.__win.draw_line(self.get_bottom_wall(), "white")
 
     def draw_move(self, cell_to: Self, undo=False):
         self_center = self.get_center()

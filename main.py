@@ -32,8 +32,15 @@ def main():
     cell5.draw("black")
 
     cell5.draw_move(cell4)
+    cell3.draw_move(cell1, undo=True)
 
     win.wait_for_close()
 
 
-main()
+def main2():
+    win = Window(1000, 1000)
+    maze = Maze(20, 20, 5, 6, 20, 20, win)
+    win.wait_for_close()
+
+
+main2()
