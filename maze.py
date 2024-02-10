@@ -1,9 +1,10 @@
-from typing import Dict, List
+from typing import List
 
 from cell import Cell
 from graphics import Point, Window
 
 import random
+import time
 
 
 class Maze:
@@ -31,9 +32,9 @@ class Maze:
         self.__reset_cells_visited()
 
     def __create_cells(self) -> List[List[Cell]]:
-        cells = []
+        cells: List[List[Cell]] = []
         for i in range(0, self.__row_count):
-            row = []
+            col: List[Cell] = []
             for j in range(0, self.__col_count):
                 p1 = Point(
                     self.__x0 + self.__cell_width * j,
@@ -47,8 +48,8 @@ class Maze:
                 cell.draw("black")
                 self.__animate()
 
-                row.append(cell)
-            cells.append(row)
+                col.append(cell)
+            cells.append(col)
         return cells
 
     def __animate(self) -> None:
@@ -56,7 +57,7 @@ class Maze:
             return
 
         self.__win.redraw()
-        # time.sleep(0.05)
+        time.sleep(0.02)
 
     def get_cells(self) -> List[List[Cell]]:
         return self.__cells
@@ -91,7 +92,7 @@ class Maze:
 
         while True:
 
-            allowed_directions: Dict[str, Dict[str, int]] = {}
+            allowed_directions: List[str] = []
             for dir in directions:
                 x = directions[dir]["x"]
                 y = directions[dir]["y"]
@@ -100,15 +101,15 @@ class Maze:
                     and 0 <= y < self.__col_count
                     and self.__cells[x][y].visited is False
                 ):
-                    allowed_directions[dir] = directions[dir]
+                    allowed_directions.append(dir)
 
             if len(allowed_directions) == 0:
                 return
 
             # Choose a random direction
             # random.seed(1)
-            chosen_direction_name = random.choice(list(allowed_directions.keys()))
-            chosen_direction = allowed_directions[chosen_direction_name]
+            chosen_direction_name = random.choice(allowed_directions)
+            chosen_direction = directions[chosen_direction_name]
 
             # Break wall between these two cells
             next_cell = self.__cells[chosen_direction["x"]][chosen_direction["y"]]
@@ -136,3 +137,63 @@ class Maze:
         for col in self.__cells:
             for cell in col:
                 cell.visited = False
+
+    def __solve_r(self, i: int, j: int) -> bool:
+
+        current_cell = self.__cells[i][j]
+        current_cell.visited = True
+
+        if i == self.__row_count - 1 and j == self.__col_count - 1:
+            return True
+
+        # direction definitions
+        directions = {
+            "up": {"x": i - 1, "y": j},
+            "down": {"x": i + 1, "y": j},
+            "left": {"x": i, "y": j - 1},
+            "right": {"x": i, "y": j + 1},
+        }
+
+        allowed_direction_name: List[str] = []
+        if not current_cell.has_left:
+            allowed_direction_name.append("left")
+        if not current_cell.has_top:
+            allowed_direction_name.append("up")
+        if not current_cell.has_right:
+            allowed_direction_name.append("right")
+        if not current_cell.has_bottom:
+            allowed_direction_name.append("down")
+
+        for dir in allowed_direction_name:
+            x = directions[dir]["x"]
+            y = directions[dir]["y"]
+            if not (
+                0 <= x < self.__row_count
+                and 0 <= y < self.__col_count
+                and self.__cells[x][y].visited is False
+            ):
+                allowed_direction_name.remove(dir)
+
+        print(f"allowed_direction_name: {allowed_direction_name}")
+
+        if len(allowed_direction_name) == 0:
+            return False
+
+        random.shuffle(allowed_direction_name)
+        for dir in allowed_direction_name:
+            print(
+                f"direction x: {directions[dir]['x']}, direction y: {directions[dir]['y']}"
+            )
+            cell_to = self.__cells[directions[dir]["x"]][directions[dir]["y"]]
+            current_cell.draw_move(cell_to)
+            self.__animate()
+
+            result = self.__solve_r(directions[dir]["x"], directions[dir]["y"])
+            if result:
+                return True
+            current_cell.draw_move(cell_to, undo=True)
+            self.__animate()
+        return False
+
+    def solve(self) -> None:
+        self.__solve_r(0, 0)

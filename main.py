@@ -40,7 +40,7 @@ def main():
 def main2():
     win = Window(1000, 1000)
     maze = Maze(20, 20, 15, 15, 40, 40, win)
-    print(maze.get_cells()[10][3].visited)
+    maze.solve()
     win.wait_for_close()
 
 

@@ -66,7 +66,7 @@ class Cell:
         self_center = self.get_center()
         cell_to_center = cell_to.get_center()
         if undo:
-            fill_color = "red"
-        else:
             fill_color = "grey"
+        else:
+            fill_color = "red"
         self.__win.draw_line(Line(self_center, cell_to_center), fill_color)
