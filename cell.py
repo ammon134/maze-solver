@@ -3,18 +3,20 @@ from typing import Self
 
 
 class Cell:
-    def __init__(self, p1: Point, p2: Point, win: Window = Window(0, 0)):
+    def __init__(self, p1: Point, p2: Point, win: Window | None = None):
         self.__p1: Point = p1
         self.__p2: Point = p2
         self.__left: float = min(self.__p1.x, self.__p2.x)
         self.__right: float = max(self.__p1.x, self.__p2.x)
         self.__top: float = min(self.__p1.y, self.__p2.y)
         self.__bottom: float = max(self.__p1.y, self.__p2.y)
+        self.__win = win
+
         self.has_left = True
         self.has_right = True
         self.has_top = True
         self.has_bottom = True
-        self.__win = win
+        self.visited = False
 
     def get_left_wall(self) -> Line:
         return Line(Point(self.__left, self.__top), Point(self.__left, self.__bottom))
@@ -33,7 +35,10 @@ class Cell:
     def get_center(self) -> Point:
         return Point((self.__left + self.__right) / 2, (self.__top + self.__bottom) / 2)
 
-    def draw(self, fill_color: str):
+    def draw(self, fill_color: str) -> None:
+        if not self.__win:
+            return
+
         if self.has_left:
             self.__win.draw_line(self.get_left_wall(), fill_color)
         else:
@@ -54,7 +59,10 @@ class Cell:
         else:
             self.__win.draw_line(self.get_bottom_wall(), "white")
 
-    def draw_move(self, cell_to: Self, undo=False):
+    def draw_move(self, cell_to: Self, undo=False) -> None:
+        if not self.__win:
+            return
+
         self_center = self.get_center()
         cell_to_center = cell_to.get_center()
         if undo:

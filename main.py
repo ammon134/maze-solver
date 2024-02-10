@@ -39,7 +39,7 @@ def main():
 
 def main2():
     win = Window(1000, 1000)
-    maze = Maze(20, 20, 5, 6, 20, 20, win)
+    maze = Maze(20, 20, 15, 15, 40, 40, win)
     win.wait_for_close()
 
 

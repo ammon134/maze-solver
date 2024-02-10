@@ -15,7 +15,7 @@ class Maze:
         col_count: int,
         cell_width: float,
         cell_height: float,
-        win: Window = Window(0, 0),
+        win: Window | None = None,
     ):
         self.__x0 = x0
         self.__y0 = y0
@@ -28,7 +28,7 @@ class Maze:
         self.cells = self.__create_cells()
         self.__create_entrance_and_exit()
 
-    def __create_cells(self) -> List:
+    def __create_cells(self) -> List[List[Cell]]:
         cells = []
         for i in range(0, self.__row_count):
             row = []

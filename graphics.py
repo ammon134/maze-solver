@@ -6,6 +6,9 @@ class Point:
         self.x = x
         self.y = y
 
+    def __str__(self):
+        return f"x: {self.x}, y: {self.y}"
+
 
 class Line:
     def __init__(self, p1: Point, p2: Point) -> None:
