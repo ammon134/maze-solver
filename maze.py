@@ -28,6 +28,7 @@ class Maze:
         self.__cells = self.__create_cells()
         self.__create_entrance_and_exit()
         self.__break_walls_r(0, 0)
+        self.__reset_cells_visited()
 
     def __create_cells(self) -> List[List[Cell]]:
         cells = []
@@ -130,3 +131,8 @@ class Maze:
             self.__animate()
 
             self.__break_walls_r(chosen_direction["x"], chosen_direction["y"])
+
+    def __reset_cells_visited(self) -> None:
+        for col in self.__cells:
+            for cell in col:
+                cell.visited = False
